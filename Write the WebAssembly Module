@@ -1,0 +1,13 @@
+#[no_mangle]
+pub extern "C" fn grayscale(image_data: *mut u8, width: usize, height: usize) {
+    let buffer = unsafe { std::slice::from_raw_parts_mut(image_data, width * height * 4) };
+    for pixel in buffer.chunks_exact_mut(4) {
+        let r = pixel[0];
+        let g = pixel[1];
+        let b = pixel[2];
+        let gray = (r as f32 * 0.299 + g as f32 * 0.587 + b as f32 * 0.114) as u8;
+        pixel[0] = gray;
+        pixel[1] = gray;
+        pixel[2] = gray;
+    }
+}
