@@ -1,0 +1,25 @@
+import init, { grayscale } from './pkg/image_editor.js';
+
+async function main() {
+  await init();
+
+  const canvas = document.getElementById('image-canvas');
+  const ctx = canvas.getContext('2d');
+
+  document.getElementById('image-upload').addEventListener('change', async (event) => {
+    const file = event.target.files[0];
+    const image = new Image();
+    image.src = URL.createObjectURL(file);
+    image.onload = () => {
+      ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+    };
+  });
+
+  document.getElementById('apply-grayscale').addEventListener('click', () => {
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    grayscale(imageData.data.buffer, canvas.width, canvas.height);
+    ctx.putImageData(imageData, 0, 0);
+  });
+}
+
+main();
